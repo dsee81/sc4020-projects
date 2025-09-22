@@ -1,0 +1,52 @@
+import networkx as nx
+
+# Load the original NetworkX karate club dataset (has 2 labels)
+G = nx.karate_club_graph()
+
+# Ground truth: 0 = "Mr. Hi", 1 = "Officer"
+true_labels = np.array([0 if G.nodes[i]['club'] == 'Mr. Hi' else 1 for i in G.nodes()])
+
+# Get adjacency matrix
+A = nx.to_numpy_array(G)
+
+print("Adjacency matrix shape:", A.shape)
+print("Number of nodes:", len(G.nodes))
+print("Ground truth labels:", true_labels)
+
+
+
+# For graph neural network method
+import numpy as np
+
+# Get indices of each class
+class0_idx = (data.y == 0).nonzero(as_tuple=True)[0]
+class1_idx = (data.y == 1).nonzero(as_tuple=True)[0]
+
+# Shuffle indices
+class0_idx = class0_idx[torch.randperm(len(class0_idx))]
+class1_idx = class1_idx[torch.randperm(len(class1_idx))]
+
+# Split 50% for train, 50% for test
+train_class0 = class0_idx[:len(class0_idx)//2]
+test_class0  = class0_idx[len(class0_idx)//2:]
+train_class1 = class1_idx[:len(class1_idx)//2]
+test_class1  = class1_idx[len(class1_idx)//2:]
+
+# Combine
+train_idx = torch.cat([train_class0, train_class1])
+test_idx  = torch.cat([test_class0, test_class1])
+
+# Make boolean masks
+train_mask = torch.zeros(data.num_nodes, dtype=torch.bool)
+test_mask = torch.zeros(data.num_nodes, dtype=torch.bool)
+train_mask[train_idx] = True
+test_mask[test_idx] = True
+
+# Save into data
+data.train_mask = train_mask
+data.test_mask = test_mask
+
+print("Train nodes:", train_idx.tolist())
+print("Test nodes:", test_idx.tolist())
+print("Class balance in train set:", data.y[train_mask].bincount().tolist())
+print("Class balance in test set:", data.y[test_mask].bincount().tolist())
