@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch
 from torch.nn import Linear
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, GATConv
 import torch
 from torch_geometric.datasets import Planetoid
 from torch_geometric.utils import to_networkx
@@ -33,7 +33,7 @@ class GCNModel(torch.nn.Module): #one which takes in the number of layers
     super(GCNModel, self).__init__()
 
     self.layer_name = layer_name
-    self.gcn_layers = {'GCN_Conv': GCN_Conv, 'GCN': GCNConv}
+    self.gcn_layers = {'GCN_Conv': GCN_Conv, 'GCN': GCNConv, 'GAT': GATConv}
     gcn_layer = self.gcn_layers[layer_name]
 
     model_layers = [gcn_layer(input_dim, hidden_layer)]
