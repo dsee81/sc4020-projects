@@ -1,19 +1,9 @@
 import torch
 import torch.nn as nn
-import torch
 from torch.nn import Linear
-from torch_geometric.nn import GCNConv, GATConv
-import torch
+from torch_geometric.nn import GCNConv
 from torch_geometric.datasets import Planetoid
 from torch_geometric.utils import to_networkx
-import matplotlib.pyplot as plt
-import pandas as pd
-import torch.nn as nn
-import networkx as nx
-from torch_geometric.utils import degree
-from collections import Counter
-import torch_geometric.transforms as T
-from torch_geometric.utils import to_dense_adj
 from layer import *
 
 class GCNModel(torch.nn.Module): #one which takes in the number of layers
@@ -33,7 +23,7 @@ class GCNModel(torch.nn.Module): #one which takes in the number of layers
     super(GCNModel, self).__init__()
 
     self.layer_name = layer_name
-    self.gcn_layers = {'GCN_Conv': GCN_Conv, 'GCN': GCNConv, 'GAT': GATConv}
+    self.gcn_layers = {'GCN_Conv': GCN_Conv, 'GCN': GCNConv}
     gcn_layer = self.gcn_layers[layer_name]
 
     model_layers = [gcn_layer(input_dim, hidden_layer)]
